@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Millionaire Game</title>
+
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background: radial-gradient(circle, #0d1b2a, #000);
+    color:white;
+    text-align:center;
+}
+
+.container {
+    max-width:800px;
+    margin:auto;
+    padding:20px;
+}
+
+h1 { color:gold; }
+
+button {
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    font-size:16px;
+    border-radius:10px;
+    border:none;
+}
+
+.correct { background:green; }
+.wrong { background:red; }
+
+.explain { margin-top:10px; color:#ccc; }
+
+#score { margin:10px; font-size:18px; color:lightgreen; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>💰 Millionaire Game</h1>
+<div id="score">Score: 0</div>
+<div id="question"></div>
+<div id="answers"></div>
+<div id="explain" class="explain"></div>
+</div>
+
+<script>
+
+const quiz = [
+
+{q:"___ Ann is a teacher",a:["-","the","an"],c:0,e:"Имя без артикля"},
+{q:"Oleg lives in ___ Kazan",a:["the","-","an"],c:1,e:"Города без артикля"},
+{q:"He has got ___ pet",a:["a","an","the"],c:0,e:"Согласная → a"},
+{q:"___ Smiths were in Paris",a:["-","an","the"],c:2,e:"Семья → the"},
+{q:"There is ___ orange",a:["a","an","-"],c:1,e:"Гласная → an"},
+
+{q:"His daughters are ___ dentists",a:["the","an","-"],c:2,e:"Мн. число → без артикля"},
+{q:"He ___ basketball every day",a:["plays","is","will"],c:0,e:"Present Simple"},
+{q:"We ___ to school now",a:["go","is going","are going"],c:2,e:"now → Continuous"},
+{q:"We ___ students",a:["are","go","am"],c:0,e:"We → are"},
+{q:"He ___ a doctor",a:["are","is","-"],c:1,e:"He → is"},
+
+{q:"Tom and Alice ___ pets",a:["had","has got","have got"],c:2,e:"They → have"},
+{q:"___ she got a pet?",a:["Has","Is","Have"],c:0,e:"3 лицо → Has"},
+{q:"My friends usually ___ football",a:["playing","played","play"],c:2,e:"usually → Present"},
+{q:"My Dad always ___ coffee",a:["drinks","drank","will"],c:0,e:"always → Present"},
+
+// ОБНОВЛЕННЫЙ 15 ВОПРОС
+{q:"___ are your hamsters? They are under the sofa.",a:["What","Where","Why"],c:1,e:"Где? → Where"},
+
+{q:"There are a lot of ___",a:["mouse","mice","monkey"],c:1,e:"mouse → mice"},
+{q:"Furniture for clothes",a:["curtains","bed","wardrobe"],c:2,e:"Шкаф"},
+{q:"Colour of cucumber",a:["purple","grey","green"],c:2,e:"Green"},
+{q:"Person who helps sick people",a:["doctor","baker","driver"],c:0,e:"Doctor лечит"},
+
+// ОБНОВЛЕННЫЙ 20 ВОПРОС
+{q:"___ are you sad? I am sick.",a:["When","Who","Why"],c:2,e:"Почему? → Why"},
+
+// DAILY ROUTINES
+{q:"I ___ up at 7 every day",a:["get","gets","getting"],c:0,e:"I → get"},
+{q:"She ___ breakfast at 8",a:["have","has","having"],c:1,e:"She → has"},
+{q:"They ___ to school",a:["go","goes","going"],c:0,e:"They → go"},
+{q:"He ___ TV in the evening",a:["watch","watches","watching"],c:1,e:"He → watches"},
+{q:"We ___ homework after school",a:["do","does","doing"],c:0,e:"We → do"},
+
+// PREPOSITIONS
+{q:"I sleep ___ night",a:["in","on","at"],c:2,e:"at night"},
+{q:"We go to Spain ___ holiday",a:["on","at","in"],c:0,e:"on holiday"},
+{q:"My birthday is ___ winter",a:["in","on","at"],c:0,e:"in winter"},
+
+// SOME ANY
+{q:"I have ___ apples",a:["some","any","a"],c:0,e:"some → утвердительное"},
+{q:"Do you have ___ milk?",a:["some","any","a"],c:1,e:"any → вопрос"}
+
+];
+
+let current = 0;
+let score = 0;
+
+function load(){
+let q = quiz[current];
+document.getElementById("question").innerText=(current+1)+". "+q.q;
+document.getElementById("answers").innerHTML="";
+document.getElementById("explain").innerText="";
+
+q.a.forEach((ans,i)=>{
+let btn=document.createElement("button");
+btn.innerText=ans;
+btn.onclick=()=>check(btn,i);
+document.getElementById("answers").appendChild(btn);
+});
+}
+
+function check(btn,i){
+let q=quiz[current];
+let buttons=document.querySelectorAll("button");
+
+buttons[q.c].classList.add("correct");
+
+if(i!==q.c){
+btn.classList.add("wrong");
+} else {
+score++;
+document.getElementById("score").innerText="Score: "+score;
+}
+
+document.getElementById("explain").innerText=q.e;
+
+setTimeout(()=>{
+current++;
+if(current<quiz.length){
+load();
+} else {
+finish();
+}
+},1500);
+}
+
+function finish(){
+if(score===30){
+document.body.innerHTML = `
+<h1>🏆 WINNER!</h1>
+<p>Your score: 30 / 30</p>
+<img src="https://cdn-icons-png.flaticon.com/512/2583/2583344.png" width="150">
+`;
+} else {
+document.body.innerHTML = `
+<h1>Game Over</h1>
+<p>Your score: ${score} / 30</p>
+`;
+}
+}
+
+load();
+
+</script>
+
+</body>
+</html>
